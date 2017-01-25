@@ -111,17 +111,17 @@ class Imu:
 			return self.sensor['accel_y']
 		elif query == 'AccelZ':
 			return self.sensor['accel_z']
-		elif query == 'MagnetoX'
+		elif query == 'MagnetoX':
 			return self.sensor['magneto_x']
-		elif query == 'MagnetoY'
+		elif query == 'MagnetoY':
 			return self.sensor['magneto_y']
-		elif query == 'MagnetoZ'
+		elif query == 'MagnetoZ':
 			return self.sensor['magneto_z']
 		elif query == 'Position':
 			return self.position
 		elif query == 'Velocity':
 			return self.velocity
 		elif query == 'Acceleration'
-			return self.accel
+			return self.accel:
 		else:
 			return -999

@@ -12,8 +12,8 @@ class Sensors:
 		self.adc2 = Adafruit_ADS1x15.ADS1115(address = 0x4B)
 		self.temp1 = I2C.get_i2c_device(address = 0x4C)
 		self.brakes = brakes
-		UART.setup("UART2")
-		self.PodIMU = Imu("/dev/ttyO2", 115200)
+		UART.setup("UART1")
+		self.PodIMU = Imu("/dev/ttyO1", 115200)
 		self.brake_read = 0
 
 		self.temp1.write8(1,96)	#setup device in 12bit resolution - 0.0625degC
@@ -21,10 +21,10 @@ class Sensors:
 		self.current_data = {
 				#Name		: [source,channel,value]
 				'BBB_Temp'	: ['temp1',0,-1],
-				'LaserPortFwd'	: ['adc2' ,0,-1],
-				'LaserPortAft'	: ['adc2' ,1,-1],
-				'LaserStbdFwd'	: ['adc1' ,2,-1],
-				'LaserStbdAft'	: ['adc1' ,3,-1],
+				'LaserPortFwd'	: ['adc2' ,0,-1], # Laser. Not in use.
+				'LaserPortAft'	: ['adc2' ,1,-1], # Laser. Not in use.
+				'LaserStbdFwd'	: ['adc1' ,2,-1], # Laser. Not in use.
+				'LaserStbdAft'	: ['adc1' ,3,-1], # Laser. Not in use.
 				'AccumPress'	: ['adc1' ,0,-1],
 				'CylinderPress'	: ['adc1' ,1,-1],
 				'Ain7'		: ['adc2' ,2,-1],
@@ -43,7 +43,10 @@ class Sensors:
 				'AccelZ'        : ['imu'  ,0,-1],
 				'MagnetoX'      : ['imu'  ,0,-1],
 				'MagnetoY'      : ['imu'  ,0,-1],
-				'MagnetoZ'      : ['imu'  ,0,-1]}
+				'MagnetoZ'      : ['imu'  ,0,-1],
+				'Position'      : ['imu'  ,0,-1],
+				'Velocity'      : ['imu'  ,0,-1],
+				'Acceleration'  : ['imu'  ,0,-1]}
 
 	def read_all(self):
 		for self.name in self.current_data:
@@ -63,7 +66,7 @@ class Sensors:
 			# 		if(self.brake_read%4 == 0):
 			# 			self.current_data[item][2] = self.brakes.solenoid_current()
 				if item == 'TapeCount':
-					if self.brake_read % 4 == 0:
+					if self.brake_read % 24 == 0:
 						self.current_data[item][2] = self.brakes.tapecount()
 				self.brake_read = self.brake_read+1
 			if('imu' in self.current_data[item][0]):
