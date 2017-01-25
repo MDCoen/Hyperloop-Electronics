@@ -19,7 +19,10 @@ try:
 			speed \t\t		returns the speed of the pod (mph)
 			brake_set \t		Sets (engages) the brakes
 			brake_release \t\t	Releases brake pressure (Brakes do not retract automatically!)
-			read_data % \t\t	Returns the raw value of the sensor % (to see a list, 'sensor_list')"""
+			read_data % \t\t	Returns the raw value of the sensor % (to see a list, 'sensor_list')
+			abort       \t\t        Sets the pod status flag to signal an abort.
+			ready       \t\t        Indicate the pod is ready to be pushed.
+			reset_imu   \t\t        Reset IMU acceleration, velocity, position variables."""
 
 	sensor_list = 	"""\n\t\t\tBBB_Temp \t	Temperature Sensor on the Beaglebone Black Cape
 			LaserPortFwd \t	Laser Distance Sensor on the Port Forward Air Bearing
@@ -77,6 +80,17 @@ try:
 			nap.sendln(helpfile)
 		if command == "sensor_list":
 			nap.sendln(sensor_list)
+		if command == "ready":
+			nap.sendln(" CMD: Signaling ready to be pushed.")
+			log.SpaceXTelemetry.podstats['status'] = 2
+		if command == "abort":
+			nap.sendln(" CMD: Signaling abort.")
+			log.SpaceXTelemetry.podstats['status'] = 0
+		if command == "reset_imu"
+			nap.sendln(" CMD: Taring IMU values.")
+			log.sensors.Imu.firstrun = True
+			log.sensors.Imu.velocity = 0
+			log.sensors.Imu.position = 0
 
 finally:
 	try:

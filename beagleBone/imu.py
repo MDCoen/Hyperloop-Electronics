@@ -90,7 +90,9 @@ class Imu:
 				now = float(fields[2])
 				delt = now - self.sensor['time'] # Seconds since last timestamp, in decimal form.
 				self.accel = math.sqrt(self.sensor['accel_x'] ** 2 + self.sensor['accel_y'] ** 2 + self.sensor['accel_z'] ** 2)
-				self.velocity += self.accelmag / delt
+				if self.accel < 0.1: #Tolerance to account for noise.
+					self.accel = 0
+				self.velocity += self.accel / delt
 				self.position += self.velocity / delt
 
 				self.sensor['time'] = now
