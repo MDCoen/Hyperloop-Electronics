@@ -3,6 +3,7 @@ from nap_communication import NAP
 from brake_communication import Brakes
 from data_collection import Sensors
 from data_logging import SensorLogging
+import Adafruit_BBIO.UART as UART
 import time
 import array
 import thread

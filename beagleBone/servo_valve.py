@@ -9,8 +9,8 @@ class ServoValve:
 	channel = 0
 
 	def __init__(self, valve, open, close):
-		self.i2c = Adafruit_I2C(0x40)
-		self.pwm = Adafruit_PCA9685.PCA9685(address=0x40, busnum=1)
+		self.i2c = Adafruit_I2C(0x40, busnum=2)
+		self.pwm = Adafruit_PCA9685.PCA9685(address=0x40, busnum=2)
 		self.pwm.set_pwm_freq(60)
 		self.channel = valve
 		self.min_pos = open

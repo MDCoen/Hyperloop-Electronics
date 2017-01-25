@@ -9,15 +9,14 @@ class Sensors:
 
 	def __init__(self, brakes):
 		UART.setup("UART1")
-		UART.setup("UART2")
 		self.adc1 = Adafruit_ADS1x15.ADS1115(address = 0x4A)
 		self.adc2 = Adafruit_ADS1x15.ADS1115(address = 0x4B)
-		self.temp1 = I2C.get_i2c_device(address = 0x4C)
+		self.temp1 = I2C.get_i2c_device(address = 0x4C, busnum = 2)
 		self.brakes = brakes
-		self.PodIMU = Imu("/dev/ttyO1", 115200)
+		self.PodIMU = Imu("/dev/ttyO2", 115200)
 		self.brake_read = 0
 
-		self.temp1.write8(1,96)	#setup device in 12bit resolution - 0.0625degC
+		#self.temp1.write8(1,96)	#setup device in 12bit resolution - 0.0625degC
 
 		self.current_data = {
 				#Name		: [source,channel,value]
