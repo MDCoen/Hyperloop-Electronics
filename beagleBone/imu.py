@@ -70,9 +70,9 @@ class Imu:
 				self.sensor['gyro_y']  = float(fields[4])
 				self.sensor['gyro_z']  = float(fields[5])
 			elif self.sensor['count'] == 1: # Accelerometer data.
-				self.sensor['accel_x']  = float(fields[3])
-				self.sensor['accel_y']  = float(fields[4])
-				self.sensor['accel_z']  = float(fields[5])
+				self.sensor['accel_x'] = float(fields[3])
+				self.sensor['accel_y'] = float(fields[4])
+				self.sensor['accel_z'] = float(fields[5])
 
 				# Assumes this packets are received more or less in realtime.
 				now = float(fields[2])
@@ -80,6 +80,8 @@ class Imu:
 				self.accel = math.sqrt(self.sensor['accel_x'] ** 2 + self.sensor['accel_y'] ** 2 + self.sensor['accel_z'] ** 2)
 				self.velocity += self.accelmag / delt
 				self.position += self.velocity / delt
+
+				self.sensor['time'] = now
 			elif self.sensor['count'] == 2: # Magnetometer data.
 				self.sensor['magneto_x'] = float(fields[3])
 				self.sensor['magneto_y'] = float(fields[4])
@@ -109,5 +111,17 @@ class Imu:
 			return self.sensor['accel_y']
 		elif query == 'AccelZ':
 			return self.sensor['accel_z']
+		elif query == 'MagnetoX'
+			return self.sensor['magneto_x']
+		elif query == 'MagnetoY'
+			return self.sensor['magneto_y']
+		elif query == 'MagnetoZ'
+			return self.sensor['magneto_z']
+		elif query == 'Position':
+			return self.position
+		elif query == 'Velocity':
+			return self.velocity
+		elif query == 'Acceleration'
+			return self.accel
 		else:
 			return -999
