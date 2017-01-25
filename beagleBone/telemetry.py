@@ -1,3 +1,4 @@
+from ctypes import *
 import socket
 
 class PodDataStruct(LittleEndianStructure):

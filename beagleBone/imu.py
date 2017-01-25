@@ -121,7 +121,7 @@ class Imu:
 			return self.position
 		elif query == 'Velocity':
 			return self.velocity
-		elif query == 'Acceleration'
-			return self.accel:
+		elif query == 'Acceleration':
+			return self.accel
 		else:
 			return -999
