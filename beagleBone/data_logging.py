@@ -34,9 +34,9 @@ class SensorLogging(threading.Thread):
 			print 'data logging failed to connect'
 		threading.Thread.__init__(self)
 		# Setup the telemetry sending class.
-		self.SpaceXTelemetry = Telemetry(192.168.0.1, 3000)
+		self.SpaceXTelemetry = Telemetry("192.168.0.1", 3000)
 		# For debugging purposes, in the lab.
-		self.MyTelemetry = Telemetry(192.168.1.3, 3000)
+		self.MyTelemetry = Telemetry("192.168.1.3", 3000)
 		self.PodStats = PodDataStruct()
 
 		self.PodStats['id'] = 29

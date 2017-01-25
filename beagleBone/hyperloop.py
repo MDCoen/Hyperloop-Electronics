@@ -36,7 +36,8 @@ try:
 	nap = NAP(7002)
 	nap.connect()
 	air = ServoValve(0,328,525)
-	brakes = Brakes()
+	UART.setup("UART2")
+	brakes = Brakes("/dev/ttyO3", 115200)
 	sensors = Sensors(brakes)
 	log = SensorLogging('DataLoggingTest.csv', sensors)
 	log.start()
@@ -86,7 +87,7 @@ try:
 		if command == "abort":
 			nap.sendln(" CMD: Signaling abort.")
 			log.SpaceXTelemetry.podstats['status'] = 0
-		if command == "reset_imu"
+		if command == "reset_imu":
 			nap.sendln(" CMD: Taring IMU values.")
 			log.sensors.Imu.firstrun = True
 			log.sensors.Imu.velocity = 0

@@ -5,9 +5,8 @@ UART.setup("UART2")
 
 class Brakes:
 
-	def __init__(self):
-		UART.setup("UART2")
-		self.brakes = serial.Serial(port = "/dev/ttyO2", baudrate=115200, timeout=2)
+	def __init__(self, nport, baud):
+		self.brakes = serial.Serial(port = nport, baudrate=baud, timeout=2)
 		self.brakes.close()
 		self.brakes.open()
 		if self.brakes.isOpen():
