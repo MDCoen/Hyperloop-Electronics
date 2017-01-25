@@ -1,45 +1,45 @@
 int race_time = 0;
-int tapecount = 0;
 int program_start_time = 0;
 int brake_time = 0;
-String input;
-String inputB;
+int counts_to_stop = 0;
+int tapecount = 0;
 
-void setup() {
-  //Setup Pins, 2 are reflection sense, 4 Solenoid On, 5 Solenoid Off
-  pinMode(2,INPUT);
-  pinMode(3,INPUT);
-  pinMode(4,OUTPUT);
-  pinMode(5,OUTPUT);
-  Serial.begin(115200);
-  
-  //Setup ISR for counting
-  attachInterrupt(digitalPinToInterrupt(2),tapeCounter,RISING);
-  digitalWrite(4, LOW);
-  digitalWrite(5, LOW);
-  
-  //Set brakes on startup
-  brakeSet();
+String input = "";
 
-  program_start_time = millis;
-
-if(Serial.available())
-  Serial.print("Set time of brake activation: (int + ;)");
-  inputB = Serial.readStringUntil(";");
-  brake_time = inputB;
-  
+void askForBrakeTime(){
+  Serial.print("Set time of brake activation: (int)");
+  String brakeString = "";
+  int inChar = Serial.read();
+  if (isDigit(inChar)) {
+    // convert the incoming byte to a char
+    // and add it to the string:
+    brakeString += (char)inChar;
+  }
+  if (inChar == '\n') {
+    brake_time = brakeString.toInt();
+  }
 }
 
-void tapeCounter() {
-    tapecount++;  //count total tape
+void askForStopCount(){
+  Serial.print("Set # of tape counts for brake activation: (int)");
+  String tapeString = "";
+  int inCharT = Serial.read();
+  if (isDigit(inCharT)) {
+    // convert the incoming byte to a char
+    // and add it to the string:
+    tapeString += (char)inCharT;
+  }
+  if (inCharT == '\n') {
+    counts_to_stop = tapeString.toInt();
+  } 
 }
 
-void handleSerial1() {
+void handleSerial() {
 
-  if(Serial.available())
+  if(Serial.available()){
     input = Serial.readStringUntil(';');
     //Serial.println(input);
-    
+  }
     if(String("tape_count").equals(input)) {
       Serial.println("Tapes: "  + String(tapecount) + " units");
     }
@@ -95,22 +95,50 @@ void brakeSet() {
   Serial.println("brakes released");
 }
 
+void setup() {
+  //Setup Pins, 2 are reflection sense, 4 Solenoid On, 5 Solenoid Off
+  pinMode(2,INPUT);
+  pinMode(3,INPUT);
+  pinMode(4,OUTPUT);
+  pinMode(5,OUTPUT);
+  Serial.begin(115200);
+  
+  //Setup ISR for counting
+  attachInterrupt(digitalPinToInterrupt(2), tapeCounter ,RISING);
+  digitalWrite(4, LOW);
+  digitalWrite(5, LOW);
+  
+  //Set brakes on startup
+  brakeSet();
+
+  program_start_time = millis;
+
+if(Serial.available()){
+  askForBrakeTime();
+  askForStopCount();
+  }
+}
+
+// ISR
+void tapeCounter() {
+    tapecount++;  //count total tape
+}
+
+
+// LOOP
 void loop() {
 
    handleSerial();
    
   if (tapecount > 1){
-    race_time = millis - start_time;
-    if Serial.available(){
-      Serial.println("Test started");
-    }
+    startTest();
   }
 
   if (tapecount > counts_to_stop ){
-     brakeSet();
+    brakeSet();
   }
   if (race_time > brake_time){
-      brakeSet();
+    brakeSet();
   }
 
  
