@@ -34,6 +34,12 @@ class Imu:
 	velocity = 0
 	position = 0
 
+	firstrun = True
+
+	gravity = { 'x' : 0 ,
+	            'y' : 0 ,
+		    'z' : 0 }
+
 	def __init__(self, port, baud):
 		# Initialize serial port. Constructor opens port for us.
 		self.device = serial.Serial(port, baud, timeout=0)
@@ -70,9 +76,15 @@ class Imu:
 				self.sensor['gyro_y']  = float(fields[4])
 				self.sensor['gyro_z']  = float(fields[5])
 			elif self.sensor['count'] == 1: # Accelerometer data.
-				self.sensor['accel_x'] = float(fields[3])
-				self.sensor['accel_y'] = float(fields[4])
-				self.sensor['accel_z'] = float(fields[5])
+				if self.firstrun:
+					self.gravity['x'] = float(fields[3])
+					self.gravity['y'] = float(fields[4])
+					self.gravity['z'] = float(fields[5])
+					self.firstrun = False
+
+				self.sensor['accel_x'] = float(fields[3]) - self.gravity['x']
+				self.sensor['accel_y'] = float(fields[4]) - self.gravity['y']
+				self.sensor['accel_z'] = float(fields[5]) - self.gravity['z']
 
 				# Assumes this packets are received more or less in realtime.
 				now = float(fields[2])
