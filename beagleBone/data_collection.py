@@ -9,8 +9,8 @@ class Sensors:
 
 	def __init__(self, brakes):
 		UART.setup("UART1")
-		self.adc1 = Adafruit_ADS1x15.ADS1115(address = 0x4A)
-		self.adc2 = Adafruit_ADS1x15.ADS1115(address = 0x4B)
+		self.adc1 = Adafruit_ADS1x15.ADS1115(address = 0x4A, busnum=2)
+		self.adc2 = Adafruit_ADS1x15.ADS1115(address = 0x4B, busnum=2)
 		self.temp1 = I2C.get_i2c_device(address = 0x4C, busnum = 2)
 		self.brakes = brakes
 		self.PodIMU = Imu("/dev/ttyO2", 115200)

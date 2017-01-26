@@ -36,19 +36,19 @@ class SensorLogging(threading.Thread):
 		# Setup the telemetry sending class.
 		self.SpaceXTelemetry = Telemetry("192.168.0.1", 3000)
 		# For debugging purposes, in the lab.
-		self.MyTelemetry = Telemetry("192.168.1.3", 3000)
+		# self.MyTelemetry = Telemetry("192.168.1.3", 3000)
 		self.PodStats = PodDataStruct()
 
-		self.PodStats['id'] = 29
-		self.PodStats['status'] = 1
-		self.PodStats['accel'] = 0
-		self.PodStats['pos'] = 0
-		self.PodStats['vel'] = 0
-		self.PodStats['volt'] = 0
-		self.PodStats['current'] = 0
-		self.PodStats['battemp'] = 0
-		self.PodStats['podtemp'] = 0
-		self.PodStats['stripe'] = 0
+		self.PodStats.id = 29
+		self.PodStats.status = 1
+		self.PodStats.accel = 0
+		self.PodStats.pos = 0
+		self.PodStats.vel = 0
+		self.PodStats.volt = 0
+		self.PodStats.current = 0
+		self.PodStats.battemp = 0
+		self.PodStats.podtemp = 0
+		self.PodStats.stripe = 0
 
 		self.log = open(filename, 'w+', 0)
 		self.log.write('index,timestamp,sensor_name,value\n')
@@ -64,13 +64,12 @@ class SensorLogging(threading.Thread):
 			self.sensors.read_all()
 			now = time.time()
 			if now - self.oldtime > 0.1:
-				self.Podstats['accel'] = self.sensors.PodIMU.accel
-				self.Podstats['pos'] = self.sensors.PodIMU.position
-				self.Podstats['vel'] = self.sensors.PodIMU.velocity
-				# self.Podstats['stripe'] = self.data['TapeCount'][2]
-				self.MyTelemetry.podstats = SpaceXTelemetry.podstats
-				self.SpaceXTelemetry.beacon(PodStats)
-				self.MyTelemetry.beacon(PodStats)
+				self.PodStats.accel = self.sensors.PodIMU.accel
+				self.PodStats.pos = self.sensors.PodIMU.position
+				self.PodStats.vel = self.sensors.PodIMU.velocity
+				# self.PodStats['stripe'] = self.data['TapeCount'][2]
+				self.SpaceXTelemetry.beacon(self.PodStats)
+				# self.MyTelemetry.beacon(self.PodStats)
 				self.oldtime = now
 
 			for key, list in self.data.items():
