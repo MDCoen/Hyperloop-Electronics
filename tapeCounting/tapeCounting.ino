@@ -1,7 +1,7 @@
 int race_time = 0;
 int program_start_time = 0;
-int brake_time = 0;
-int counts_to_stop = 0;
+int brake_time = 25000;  //millis
+int counts_to_stop = 35;
 int tapecount = 0;
 
 String input = "";
@@ -123,7 +123,6 @@ if(Serial.available()){
 void tapeCounter() {
     tapecount++;  //count total tape
 }
-
 
 // LOOP
 void loop() {
