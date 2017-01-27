@@ -2,6 +2,7 @@ from servo_valve import ServoValve
 from nap_communication import NAP
 from brake_communication import Brakes
 from data_collection import Sensors
+from switchctl import Switch
 from data_logging import SensorLogging
 import Adafruit_BBIO.UART as UART
 import time
@@ -39,6 +40,7 @@ try:
 	air = ServoValve(0,328,525)
 	UART.setup("UART2")
 	brakes = Brakes("/dev/ttyO3", 115200)
+	AirValve = Switch("GPIO3_19", "GPIO3_21")
 	sensors = Sensors(brakes)
 	log = SensorLogging('DataLoggingTest.csv', sensors)
 	log.start()
@@ -55,17 +57,13 @@ try:
 		command = data[0:data.find(" ")]
 		args = data[data.find(" ")+1:len(data)-1]
 		if command == "valve_open":
-			nap.sendln(air.open())
+			nap.sendln(" CMD: Opening valve.")
+			AirValve.open()
 		if command == "valve_close":
-			nap.sendln(air.close())
-		if command == "valve_set_open":
-			nap.sendln(str(air.set_open(int(args[:3]))))
-		if command == "valve_set_close":
-			nap.sendln(str(air.set_close(int(args[:3]))))
-		if command == "valve_get_open":
-			nap.sendln(str(air.get_open()))
-		if command == "valve_get_close":
-			nap.sendln(str(air.get_close()))
+			nap.sendln(" CMD: Closing valve.")
+			AirValve.close()
+		if command == "valve_status":
+			nap.sendln(" CMD: Is open: {}".format(AirValve.isopen))
 		if command == "tape_pulse_period":
 			nap.sendln(str(brakes.pulseperiod()))
 		if command == "position":
