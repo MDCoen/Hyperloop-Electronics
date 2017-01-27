@@ -29,6 +29,7 @@ void handleserial() {
 	else if (String("start_test").equals(input)) {
 		starttime = millis();
 		running = true;
+		num_tape = 0;
 	}
 	else if (String("set_time").equals(input)) {
 		maxtime = Serial.readStringUntil(';').toInt();
@@ -94,6 +95,8 @@ void setup() {
 	attachInterrupt(digitalPinToInterrupt(2), tapeincrement, RISING);
 	digitalWrite(4, LOW);
 	digitalWrite(5, LOW);
+
+	setbrake();
 
 	starttime = millis();
 
