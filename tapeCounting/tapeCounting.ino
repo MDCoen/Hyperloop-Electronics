@@ -4,10 +4,15 @@ int brake_time = 25000;  //millis
 int counts_to_stop = 35;
 int tapecount = 0;
 
+// Values range from 0 to 1023, corresponding to 0 to 5 V respectively.
+int cell1
+int cell2
+int cell3
+int cell4
+
 String input = "";
 
-void askForBrakeTime(){
-  Serial.print("Set time of brake activation: (int)");
+void setBrakeTime(){
   String brakeString = "";
   int inChar = Serial.read();
   if (isDigit(inChar)) {
@@ -20,8 +25,7 @@ void askForBrakeTime(){
   }
 }
 
-void askForStopCount(){
-  Serial.print("Set # of tape counts for brake activation: (int)");
+void setStopCount(){
   String tapeString = "";
   int inCharT = Serial.read();
   if (isDigit(inCharT)) {
@@ -58,8 +62,17 @@ void handleSerial() {
     if(String("brake_state").equals(input)) {
       brakeState();
     }
+    if (String("set_time").equals(input)) {
+      setBrakeTime();
+    }
+    if (String("set_count").equals(input)) {
+      setStopCount();
+    }
     if(String("current").equals(input)) {
       Serial.println("Current Is: " + String(analogRead(A0)) + "counts");
+    }
+    if (String("read_voltages").equals(input) {
+      Serial.println("voltage," + String(analogRead(A2)) + "," + String(analogRead(A3)) + "," + String(analogRead(A4)) + "," + String(analogRead(A5)));
     }
 }
 
@@ -139,9 +152,5 @@ void loop() {
   if (race_time > brake_time){
     brakeSet();
   }
-
- 
-
-  
  
 }
