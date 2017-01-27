@@ -49,7 +49,7 @@ class Arduino:
 				self.elapsed = int(values[1])
 				self.maxtime = int(values[2])
 				return self.elapsed
-			else
+			else:
 				print(' DUO: Incorrect packet. Expected time, got {}'.format(values[0]))
 				return -2
 
