@@ -9,11 +9,13 @@ class Switch:
 		self.pinopen = newpinopen
 		self.pinclose = newpinclose
 
-		GPIO.setup(self.pinopen)
-		GPIO.setup(self.pinclose)
+		GPIO.setup(self.pinopen, GPIO.OUT)
+		GPIO.setup(self.pinclose, GPIO.OUT)
 
 		GPIO.output(self.pinopen, GPIO.LOW)
 		GPIO.output(self.pinclose, GPIO.LOW)
+
+		self.close()
 
 	def open(self):
 		GPIO.output(self.pinopen, GPIO.HIGH)

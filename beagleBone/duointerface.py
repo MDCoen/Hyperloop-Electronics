@@ -18,13 +18,14 @@ class Arduino:
 		if pkt == "":
 			return -1
 
+		print("{}".format(pkt)
+
 		fields = pkt.split(",")
 		return fields
 
 	def sendcmd(self, data):
 		self.serline.write(data)
 		self.serline.write(";")
-		time.sleep(0.1)
 	
 	def gettape(self):
 		self.sendcmd("tape_count")
@@ -58,9 +59,9 @@ class Arduino:
 
 	def setbrakes(self, on):
 		if on:
-			self.sendcmd("brakes_on")
+			self.sendcmd("set_brakes")
 		else:
-			self.sendcmd("brakes_off")
+			self.sendcmd("release_brakes")
 		return self.getbrakes()
 
 	def getbrakes(self):
@@ -108,6 +109,20 @@ class Arduino:
 		print(' DUO: No response received!')
 		return -1
 
+	def getcurrent(self):
+		self.sendcmd("get_current")
+		values = self.parseln()
+		if values != -1:
+			if values[0] == "current":
+				self.current = int(values[1])
+				return self.current
+			else:
+				print(' DUO: Incorrect packet. Expected current, got {}'.format(values[0]))
+				return -2
+
+		print(' DUO: No response received!')
+		return -1
+
 	def getvoltages(self):
 		self.sendcmd("get_voltages")
 		values = self.parseln()
@@ -115,12 +130,12 @@ class Arduino:
 			if values[0] == "voltages":
 				self.battery[0] = float(values[1])
 				self.battery[1] = float(values[2])
-				self.battery[3] = float(values[3])
-				self.battery[4] = float(values[4])
+				self.battery[2] = float(values[3])
+				self.battery[3] = float(values[4])
 				return self.battery
 			else:
 				print(' DUO: Incorrect packet. Expected voltages, got {}'.format(values[0]))
-				return 02
+				return -2
 
 		print(' DUO: No response received!')
 		return -1

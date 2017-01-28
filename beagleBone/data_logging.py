@@ -24,7 +24,8 @@ class SensorLogging(threading.Thread):
 
 	daemon = True
 
-	oldtime = 0
+	oldbeacontime = 0
+	olddatatime   = 0
 
 	def __init__(self, filename, sensors):
 		try:
@@ -39,16 +40,16 @@ class SensorLogging(threading.Thread):
 		self.MyTelemetry = Telemetry("192.168.1.3", 3000)
 		self.PodStats = PodDataStruct()
 
-		self.PodStats['id'] = 29
-		self.PodStats['status'] = 1
-		self.PodStats['accel'] = 0
-		self.PodStats['pos'] = 0
-		self.PodStats['vel'] = 0
-		self.PodStats['volt'] = 0
-		self.PodStats['current'] = 0
-		self.PodStats['battemp'] = 0
-		self.PodStats['podtemp'] = 0
-		self.PodStats['stripe'] = 0
+		self.PodStats.id = 29
+		self.PodStats.status = 1
+		self.PodStats.accel = 0
+		self.PodStats.pos = 0
+		self.PodStats.vel = 0
+		self.PodStats.volt = 0
+		self.PodStats.current = 0
+		self.PodStats.battemp = 0
+		self.PodStats.podtemp = 0
+		self.PodStats.stripe = 0
 
 		self.log = open(filename, 'w+', 0)
 		self.log.write('index,timestamp,sensor_name,value\n')
@@ -63,20 +64,21 @@ class SensorLogging(threading.Thread):
 		while self.logRun:
 			self.sensors.read_all()
 			now = time.time()
-			if now - self.oldtime > 0.1:
-				self.Podstats['accel'] = self.sensors.PodIMU.accel
-				self.Podstats['pos'] = self.sensors.PodIMU.position
-				self.Podstats['vel'] = self.sensors.PodIMU.velocity
-				# self.Podstats['stripe'] = self.data['TapeCount'][2]
-				self.MyTelemetry.podstats = SpaceXTelemetry.podstats
-				self.SpaceXTelemetry.beacon(PodStats)
-				self.MyTelemetry.beacon(PodStats)
-				self.oldtime = now
+			if now - self.oldbeacontime > 0.1:
+				self.PodStats.accel = self.sensors.PodIMU.accel
+				self.PodStats.pos = self.sensors.PodIMU.position
+				self.PodStats.vel = self.sensors.PodIMU.velocity
+				self.Podstats['stripe'] = self.data['TapeCount'][2]
+				self.SpaceXTelemetry.beacon(self.PodStats)
+				self.MyTelemetry.beacon(self.PodStats)
+				self.oldbeacontime = now
 
-			for key, list in self.data.items():
-				self.nap.sendln(str(self.index) + ',' + str(time.time()) + ',' + key + ',' + str(list[2]))
-				self.log.write(str(self.index) + ',' + str(time.time()) + ',' + key + ',' + str(list[2]) + '\n')
-				self.index = self.index+1
+			if now - self.olddatatime > 0.05:
+				for key, list in self.data.items():
+					self.nap.sendln(str(self.index) + ',' + str(time.time()) + ',' + key + ',' + str(list[2]))
+					self.log.write(str(self.index) + ',' + str(time.time()) + ',' + key + ',' + str(list[2]) + '\n')
+					self.index = self.index+1
+				self.olddatatime = now
 
 	def close_log(self):
 		self.logRun = False

@@ -3,6 +3,7 @@ from nap_communication import NAP
 from brake_communication import Brakes
 from data_collection import Sensors
 from switchctl import Switch
+from duointerface import Arduino
 from data_logging import SensorLogging
 import Adafruit_BBIO.UART as UART
 import time
@@ -39,9 +40,10 @@ try:
 	nap.connect()
 	air = ServoValve(0,328,525)
 	UART.setup("UART2")
-	brakes = Brakes("/dev/ttyO3", 115200)
-	AirValve = Switch("GPIO3_19", "GPIO3_21")
-	sensors = Sensors(brakes)
+	# brakes = Brakes("/dev/ttyO3", 115200)
+	Expansion = Arduino("/dev/ttyO2", 115200)
+	AirValve = Switch("GPIO3_19", "GPIO1_17")
+	sensors = Sensors(Expansion)
 	log = SensorLogging('DataLoggingTest.csv', sensors)
 	log.start()
 
@@ -66,16 +68,16 @@ try:
 			nap.sendln(" CMD: Is open: {}".format(AirValve.isopen))
 		if command == "tape_pulse_period":
 			nap.sendln(str(brakes.pulseperiod()))
-		if command == "position":
-			nap.sendln(str(brakes.position()))
-		if command == "speed":
-			nap.sendln(str(brakes.speed()))
-		if command == "brake_set":
-			nap.sendln(brakes.set_brakes("close"))
-		if command == "brake_release":
-			nap.sendln(brakes.set_brakes("open"))
+		if command == "set_brakes":
+			Expansion.setbrakes(True)
+		if command == "release_brakes":
+			Expansion.setbrakes(False)
+		if command == "start_test":
+			Expansion.settest(True)
+		if command == "stop_test":
+			Expansion.settest(False)
 		if command == "read_data":
-			nap.sendln(sensors.read(args))		
+			nap.sendln(sensors.read(args))
 		if command == "help":
 			nap.sendln(helpfile)
 		if command == "sensor_list":
