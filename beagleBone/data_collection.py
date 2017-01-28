@@ -8,12 +8,12 @@ from imu import Imu
 class Sensors:
 
 	def __init__(self, brakes):
-		UART.setup("UART1")
+		UART.setup("UART2")
 		self.adc1 = Adafruit_ADS1x15.ADS1115(address = 0x4A, busnum = 2)
 		self.adc2 = Adafruit_ADS1x15.ADS1115(address = 0x4B, busnum = 2)
 		self.temp1 = I2C.get_i2c_device(address = 0x4C, busnum = 2)
 		self.brakes = brakes
-		self.PodIMU = Imu("/dev/ttyO2", 115200)
+		self.PodIMU = Imu("/dev/ttyO3", 115200)
 
 		#self.temp1.write8(1,96)	#setup device in 12bit resolution - 0.0625degC
 
@@ -26,12 +26,12 @@ class Sensors:
 				#'LaserStbdAft'	: ['adc1' ,3,-1], # Laser. Not in use.
 				#'AccumPress'	: ['adc1' ,0,-1],
 				#'CylinderPress'	: ['adc1' ,1,-1],
-				#'PressureFwd'	: ['adc2' ,2,-1],
-				#'PressureBk'	: ['adc2' ,3,-1],
-				'Pressure0'     : ['adc2' ,0,-1],
-				'Pressure1'     : ['adc2' ,1,-1],
-				'Pressure2'     : ['adc2' ,2,-1],
-				'Pressure3'     : ['adc2' ,3,-1],
+				#'Ain7' 	: ['adc2' ,2,-1],
+				#'Ain8' 	: ['adc2' ,3,-1],
+				'HighPressure'  : ['adc2' ,0,-1],
+				'LowPressure'   : ['adc2' ,1,-1],
+				'Accumulator'   : ['adc2' ,2,-1],
+				'Cylinder'      : ['adc2' ,3,-1],
 				'TapeCount'     : ['due'  ,0,-1],
 				'Cell0'         : ['due'  ,0,-1],
 				'Cell1'         : ['due'  ,0,-1],

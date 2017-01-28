@@ -18,8 +18,6 @@ class Arduino:
 		if pkt == "":
 			return -1
 
-		print("{}".format(pkt)
-
 		fields = pkt.split(",")
 		return fields
 

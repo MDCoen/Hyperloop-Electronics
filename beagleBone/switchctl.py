@@ -24,10 +24,10 @@ class Switch:
 		self.isopen = True
 
 	def close(self):
-		GPIO.output(self.pinclose, GPIO.HIGH)
+		GPIO.output(self.pinopen, GPIO.HIGH)
 		time.sleep(0.1)
-		GPIO.output(self.pinclose, GPIO.LOW)
-		self.isopen= False
+		GPIO.output(self.pinopen, GPIO.LOW)
+		self.isopen = False
 
 	def status(self):
 		return self.isopen

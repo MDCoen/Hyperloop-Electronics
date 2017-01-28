@@ -39,7 +39,7 @@ try:
 	nap = NAP(7002)
 	nap.connect()
 	air = ServoValve(0,328,525)
-	UART.setup("UART2")
+	UART.setup("UART1")
 	# brakes = Brakes("/dev/ttyO3", 115200)
 	Expansion = Arduino("/dev/ttyO2", 115200)
 	AirValve = Switch("GPIO3_19", "GPIO1_17")

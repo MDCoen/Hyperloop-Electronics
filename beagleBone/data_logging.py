@@ -68,7 +68,7 @@ class SensorLogging(threading.Thread):
 				self.PodStats.accel = self.sensors.PodIMU.accel
 				self.PodStats.pos = self.sensors.PodIMU.position
 				self.PodStats.vel = self.sensors.PodIMU.velocity
-				self.Podstats['stripe'] = self.data['TapeCount'][2]
+				self.PodStats.stripe = self.data['TapeCount'][2]
 				self.SpaceXTelemetry.beacon(self.PodStats)
 				self.MyTelemetry.beacon(self.PodStats)
 				self.oldbeacontime = now

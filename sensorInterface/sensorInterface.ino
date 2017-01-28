@@ -15,7 +15,7 @@ void handleserial() {
 		return;
 
 	if (String("tape_count").equals(input)) {
-		Serial.println("tape," + String(numtape));
+		Serial.println("tape," + String(numtape) + "," + String(maxtape));
 	}
 	else if (String("brakes_on").equals(input)) {
 		setbrake();
@@ -45,6 +45,9 @@ void handleserial() {
 	}
 	else if (String("stop_test").equals(input)) {
 		running = false;
+	}
+	else if (String("get_current").equals(input)) {
+		Serial.println("current," + String(analogRead(A0)))
 	}
 	else if (String("get_test_status").equals(input)) {
 		Serial.println("test," + String(running));
