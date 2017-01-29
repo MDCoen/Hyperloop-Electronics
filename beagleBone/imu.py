@@ -61,14 +61,11 @@ class Imu:
 			return
 
 		if fields[0] == "$PCHRA": # Attitude packet received.
-			print(' IMU: Received an attitude packet.')
 			self.attitude['time']    = float(fields[1])
 			self.attitude['roll']    = float(fields[2])
 			self.attitude['pitch']   = float(fields[3])
 			self.attitude['yaw']     = float(fields[4])
-			self.attitude['heading'] = float(fields[5])
 		elif fields[0] == "$PCHRS": # Sensor packet received.
-			print(' IMU: Received a sensor packet.')
 			self.sensor['count']     = int(fields[1])
 
 			if self.sensor['count'] == 0: # Gyroscope data.
@@ -90,7 +87,7 @@ class Imu:
 				now = float(fields[2])
 				delt = now - self.sensor['time'] # Seconds since last timestamp, in decimal form.
 				self.accel = math.sqrt(self.sensor['accel_x'] ** 2 + self.sensor['accel_y'] ** 2 + self.sensor['accel_z'] ** 2)
-				if self.accel < 0.1: #Tolerance to account for noise.
+				if self.accel < 0.01: #Tolerance to account for noise.
 					self.accel = 0
 				self.velocity += self.accel / delt
 				self.position += self.velocity / delt

@@ -37,7 +37,7 @@ class Arduino:
 				print(' DUO: Incorrect packet. Expected tape, got {}'.format(values[0]))
 				return -2
 
-		print(' DUO: No response received!')
+		print(' DUO: No response received for tape request!')
 		return -1
 
 	def gettime(self):
@@ -52,7 +52,7 @@ class Arduino:
 				print(' DUO: Incorrect packet. Expected time, got {}'.format(values[0]))
 				return -2
 
-		print(' DUO: No response received!')
+		print(' DUO: No response received for time request!')
 		return -1
 
 	def setbrakes(self, on):
@@ -60,7 +60,6 @@ class Arduino:
 			self.sendcmd("set_brakes")
 		else:
 			self.sendcmd("release_brakes")
-		return self.getbrakes()
 
 	def getbrakes(self):
 		self.sendcmd("get_brake_status")
@@ -73,7 +72,7 @@ class Arduino:
 				print(' DUO: Incorrect packet. Expected brake, got {}'.format(values[0]))
 				return -2
 
-		print(' DUO: No response received!')
+		print(' DUO: No response received for brake request!')
 		return -1
 
 	def settest(self, start):
@@ -81,17 +80,14 @@ class Arduino:
 			self.sendcmd("start_test")
 		else:
 			self.sendcmd("stop_test")
-		return self.gettest()
 
 	def settime(self, time):
 		self.sendcmd("set_time")
 		self.sendcmd("{}".format(time))
-		self.gettime()
 
 	def settape(self, maxtape):
 		self.sendcmd("set_tape")
 		self.sendcmd("{}".format(maxtape))
-		self.gettape()
 
 	def gettest(self):
 		self.sendcmd("get_test_status")
@@ -104,21 +100,7 @@ class Arduino:
 				print(' DUO: Incorrect packet. Expected test, got {}'.format(values[0]))
 				return -2
 
-		print(' DUO: No response received!')
-		return -1
-
-	def getcurrent(self):
-		self.sendcmd("get_current")
-		values = self.parseln()
-		if values != -1:
-			if values[0] == "current":
-				self.current = int(values[1])
-				return self.current
-			else:
-				print(' DUO: Incorrect packet. Expected current, got {}'.format(values[0]))
-				return -2
-
-		print(' DUO: No response received!')
+		print(' DUO: No response received for test request!')
 		return -1
 
 	def getvoltages(self):
@@ -135,5 +117,5 @@ class Arduino:
 				print(' DUO: Incorrect packet. Expected voltages, got {}'.format(values[0]))
 				return -2
 
-		print(' DUO: No response received!')
+		print(' DUO: No response received for voltages request!')
 		return -1

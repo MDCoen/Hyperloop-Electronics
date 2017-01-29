@@ -39,7 +39,7 @@ try:
 	nap = NAP(7002)
 	nap.connect()
 	air = ServoValve(0,328,525)
-	UART.setup("UART1")
+	UART.setup("UART2")
 	# brakes = Brakes("/dev/ttyO3", 115200)
 	Expansion = Arduino("/dev/ttyO2", 115200)
 	AirValve = Switch("GPIO3_19", "GPIO1_17")
@@ -61,38 +61,50 @@ try:
 		if command == "valve_open":
 			nap.sendln(" CMD: Opening valve.")
 			AirValve.open()
-		if command == "valve_close":
+		elif command == "valve_close":
 			nap.sendln(" CMD: Closing valve.")
 			AirValve.close()
-		if command == "valve_status":
+		elif command == "valve_status":
 			nap.sendln(" CMD: Is open: {}".format(AirValve.isopen))
-		if command == "tape_pulse_period":
-			nap.sendln(str(brakes.pulseperiod()))
-		if command == "set_brakes":
+		elif "set_tapecount" in command:
+			print(" CMD: Setting the tapecount.")
+			fields = command.split(",")
+			Expansion.settime(float(fields[1]))
+		elif "set_maxtime" in command:
+			print(" CMD: Setting the max time.")
+			fields.command.split(",")
+			Expansion.settime(float(fields[1]))
+		elif command == "set_brakes":
+			print(" CMD: Setting brakes.")
 			Expansion.setbrakes(True)
-		if command == "release_brakes":
+		elif command == "release_brakes":
+			print(" CMD: Releasing brakes.")
 			Expansion.setbrakes(False)
-		if command == "start_test":
+		elif command == "start_test":
+			print(" CMD: Starting test.")
 			Expansion.settest(True)
-		if command == "stop_test":
+		elif command == "stop_test":
+			print(" CMD: Stopping test.")
 			Expansion.settest(False)
-		if command == "read_data":
+		elif command == "read_data":
 			nap.sendln(sensors.read(args))
-		if command == "help":
+		elif command == "help":
 			nap.sendln(helpfile)
-		if command == "sensor_list":
+		elif command == "sensor_list":
 			nap.sendln(sensor_list)
-		if command == "ready":
+		elif command == "ready":
 			nap.sendln(" CMD: Signaling ready to be pushed.")
 			log.SpaceXTelemetry.podstats['status'] = 2
-		if command == "abort":
+		elif command == "abort":
 			nap.sendln(" CMD: Signaling abort.")
 			log.SpaceXTelemetry.podstats['status'] = 0
-		if command == "reset_imu":
+		elif command == "reset_imu":
 			nap.sendln(" CMD: Taring IMU values.")
 			log.sensors.Imu.firstrun = True
 			log.sensors.Imu.velocity = 0
 			log.sensors.Imu.position = 0
+		elif command != "quit":
+			nap.sendln(" CMD: Unknown command.")
 
 finally:
 	try:

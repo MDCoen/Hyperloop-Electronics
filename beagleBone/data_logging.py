@@ -65,15 +65,15 @@ class SensorLogging(threading.Thread):
 			self.sensors.read_all()
 			now = time.time()
 			if now - self.oldbeacontime > 0.1:
-				self.PodStats.accel = self.sensors.PodIMU.accel
-				self.PodStats.pos = self.sensors.PodIMU.position
-				self.PodStats.vel = self.sensors.PodIMU.velocity
+				self.PodStats.accel = int(self.sensors.PodIMU.accel)
+				self.PodStats.pos = int(self.sensors.PodIMU.position)
+				self.PodStats.vel = int(self.sensors.PodIMU.velocity)
 				self.PodStats.stripe = self.data['TapeCount'][2]
 				self.SpaceXTelemetry.beacon(self.PodStats)
 				self.MyTelemetry.beacon(self.PodStats)
 				self.oldbeacontime = now
 
-			if now - self.olddatatime > 0.05:
+			if now - self.olddatatime > 0.1:
 				for key, list in self.data.items():
 					self.nap.sendln(str(self.index) + ',' + str(time.time()) + ',' + key + ',' + str(list[2]))
 					self.log.write(str(self.index) + ',' + str(time.time()) + ',' + key + ',' + str(list[2]) + '\n')

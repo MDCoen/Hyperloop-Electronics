@@ -4,7 +4,7 @@ class NAP:
 
 	def __init__(self, port):
 		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.host = '192.168.0.113'
+		self.host = '192.168.1.2'
 		self.port = port
 		self.s.bind((self.host,self.port))
 	

@@ -8,12 +8,12 @@ from imu import Imu
 class Sensors:
 
 	def __init__(self, brakes):
-		UART.setup("UART2")
+		UART.setup("UART1")
 		self.adc1 = Adafruit_ADS1x15.ADS1115(address = 0x4A, busnum = 2)
 		self.adc2 = Adafruit_ADS1x15.ADS1115(address = 0x4B, busnum = 2)
 		self.temp1 = I2C.get_i2c_device(address = 0x4C, busnum = 2)
 		self.brakes = brakes
-		self.PodIMU = Imu("/dev/ttyO3", 115200)
+		self.PodIMU = Imu("/dev/ttyO1", 115200)
 
 		#self.temp1.write8(1,96)	#setup device in 12bit resolution - 0.0625degC
 
@@ -28,17 +28,16 @@ class Sensors:
 				#'CylinderPress'	: ['adc1' ,1,-1],
 				#'Ain7' 	: ['adc2' ,2,-1],
 				#'Ain8' 	: ['adc2' ,3,-1],
-				'HighPressure'  : ['adc2' ,0,-1],
-				'LowPressure'   : ['adc2' ,1,-1],
-				'Accumulator'   : ['adc2' ,2,-1],
-				'Cylinder'      : ['adc2' ,3,-1],
+				'HighPressure'  : ['adc2' ,0,-1], # 0 to 5000 psi
+				'LowPressure'   : ['adc2' ,1,-1], # 0 to 100 psi
+				'Accumulator'   : ['adc2' ,2,-1], # 0 to 5000 psi
+				'Cylinder'      : ['adc2' ,3,-1], # 0 t0 1000 psi
 				'TapeCount'     : ['due'  ,0,-1],
 				'Cell0'         : ['due'  ,0,-1],
 				'Cell1'         : ['due'  ,0,-1],
 				'Cell2'         : ['due'  ,0,-1],
 				'Cell3'         : ['due'  ,0,-1],
 				'BrakeStatus'   : ['due'  ,0,-1],
-				'SolenoidCurr'  : ['due'  ,0,-1],
 				'TimeElapsed'   : ['due'  ,0,-1],
 				'Roll'          : ['imu'  ,0,-1],
 				'Pitch'         : ['imu'  ,0,-1],
@@ -70,6 +69,8 @@ class Sensors:
 				self.current_data[item][2] = eval('self.' + self.current_data[item][0] + '.readU16(0,False)')
 			if('adc' in self.current_data[item][0]):
 				self.current_data[item][2] = eval('self.' + self.current_data[item][0] + '.read_adc(' + str(self.current_data[item][1]) + ')')
+				if item == 'Cylinder':
+					self.current_data[item][2] = self.current_data[item][2] / 65536 * 5
 			if('due' in self.current_data[item][0]): # Jank AF
 			 	if item == 'TapeCount':
 					self.current_data[item][2] = self.brakes.gettape()
@@ -78,11 +79,9 @@ class Sensors:
 				elif item == 'Cell1':
 					self.current_data[item][2] = (self.brakes.battery[1] * 2 - self.brakes.battery[0]) / 1023 * 5
 				elif item == 'Cell2':
-					self.current_data[item][2] = (self.brakes.battery[2] * 3 - self.brakes.battery[1]) / 1023 * 5 
+					self.current_data[item][2] = (self.brakes.battery[2] * 3 - self.brakes.battery[1] - self.brakes.battery[0]) / 1023 * 5 
 				elif item == 'Cell3':
-					self.current_data[item][2] = (self.brakes.battery[3] * 4 - self.brakes.battery[2]) / 1023 * 5
-			 	elif item == 'SolenoidCurr':
-			 		self.current_data[item][2] = self.brakes.getcurrent() # How to interpret this voltage value as a current?
+					self.current_data[item][2] = (self.brakes.battery[3] * 4 - self.brakes.battery[2] - self.brakes.battery[1] - self.brakes.battery[0]) / 1023 * 5
 				elif item == 'BrakeStatus':
 					self.current_data[item][2] = self.brakes.getbrakes() #
 				elif item == 'TimeElapsed':

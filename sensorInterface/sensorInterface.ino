@@ -17,10 +17,10 @@ void handleserial() {
 	if (String("tape_count").equals(input)) {
 		Serial.println("tape," + String(numtape) + "," + String(maxtape));
 	}
-	else if (String("brakes_on").equals(input)) {
+	else if (String("set_brakes").equals(input)) {
 		setbrake();
 	}
-	else if (String("brakes_off").equals(input)) {
+	else if (String("release_brakes").equals(input)) {
 		releasebrake();
 	}
 	else if (String("get_brake_status").equals(input)) {
