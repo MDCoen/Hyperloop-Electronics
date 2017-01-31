@@ -5,6 +5,6 @@ if [ "$1" == "" ]; then
 	exit 1
 fi
 
-rsync --progress -r --exclude=*.pyc ./beagleBone debian@"$1":/home/debian/
+rsync --progress -r --exclude *.swp --exclude=*.pyc ./beagleBone debian@"$1":/home/debian/
 
 exit 0

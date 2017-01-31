@@ -33,12 +33,14 @@ class Sensors:
 				'Accumulator'   : ['adc2' ,2,-1], # 0 to 5000 psi
 				'Cylinder'      : ['adc2' ,3,-1], # 0 t0 1000 psi
 				'TapeCount'     : ['due'  ,0,-1],
+				'TapeMax'       : ['due'  ,0,-1],
 				'Cell0'         : ['due'  ,0,-1],
 				'Cell1'         : ['due'  ,0,-1],
 				'Cell2'         : ['due'  ,0,-1],
 				'Cell3'         : ['due'  ,0,-1],
 				'BrakeStatus'   : ['due'  ,0,-1],
 				'TimeElapsed'   : ['due'  ,0,-1],
+				'TimeMax'       : ['due'  ,0,-1],
 				'Roll'          : ['imu'  ,0,-1],
 				'Pitch'         : ['imu'  ,0,-1],
 				'Yaw'           : ['imu'  ,0,-1],
@@ -69,8 +71,6 @@ class Sensors:
 				self.current_data[item][2] = eval('self.' + self.current_data[item][0] + '.readU16(0,False)')
 			if('adc' in self.current_data[item][0]):
 				self.current_data[item][2] = eval('self.' + self.current_data[item][0] + '.read_adc(' + str(self.current_data[item][1]) + ')')
-				if item == 'Cylinder':
-					self.current_data[item][2] = self.current_data[item][2] / 65536 * 5
 			if('due' in self.current_data[item][0]): # Jank AF
 			 	if item == 'TapeCount':
 					self.current_data[item][2] = self.brakes.gettape()
@@ -86,6 +86,12 @@ class Sensors:
 					self.current_data[item][2] = self.brakes.getbrakes() #
 				elif item == 'TimeElapsed':
 					self.current_data[item][2] = self.brakes.gettime()
+				elif item == 'TimeMax':
+					self.current_data[item][2] = self.brakes.maxtime
+				elif item == 'TapeMax':
+					self.current_data[item][2] = self.brakes.tapemax
+				else:
+				    	print('DATA: Unknown variable {}'.format(item))
 			if('imu' in self.current_data[item][0]):
 				self.PodIMU.update()
 				self.current_data[item][2] = self.PodIMU.getdata(item)

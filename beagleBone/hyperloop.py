@@ -69,11 +69,11 @@ try:
 		elif "set_tapecount" in command:
 			print(" CMD: Setting the tapecount.")
 			fields = command.split(",")
-			Expansion.settime(float(fields[1]))
+			Expansion.settime(int(fields[1]))
 		elif "set_maxtime" in command:
 			print(" CMD: Setting the max time.")
-			fields.command.split(",")
-			Expansion.settime(float(fields[1]))
+			fields = command.split(",")
+			Expansion.settime(int(fields[1]))
 		elif command == "set_brakes":
 			print(" CMD: Setting brakes.")
 			Expansion.setbrakes(True)
