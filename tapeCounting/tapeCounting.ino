@@ -4,12 +4,6 @@ int brake_time = 25000;  //millis
 int counts_to_stop = 35;
 int tapecount = 0;
 
-// Values range from 0 to 1023, corresponding to 0 to 5 V respectively.
-int cell1
-int cell2
-int cell3
-int cell4
-
 String input = "";
 
 void setBrakeTime(){
@@ -71,8 +65,8 @@ void handleSerial() {
     if(String("current").equals(input)) {
       Serial.println("Current Is: " + String(analogRead(A0)) + "counts");
     }
-    if (String("read_voltages").equals(input) {
-      Serial.println("voltage," + String(analogRead(A2)) + "," + String(analogRead(A3)) + "," + String(analogRead(A4)) + "," + String(analogRead(A5)));
+    if (String("read_voltages").equals(input)) {
+      Serial.println("voltage," + String(analogRead(A0)) + "," + String(analogRead(A3)) + "," + String(analogRead(A4)) + "," + String(analogRead(A5)));
     }
 }
 
@@ -114,6 +108,7 @@ void setup() {
   pinMode(3,INPUT);
   pinMode(4,OUTPUT);
   pinMode(5,OUTPUT);
+  pinMode(A0, INPUT);
   Serial.begin(115200);
   
   //Setup ISR for counting
@@ -125,11 +120,6 @@ void setup() {
   brakeSet();
 
   program_start_time = millis;
-
-if(Serial.available()){
-  askForBrakeTime();
-  askForStopCount();
-  }
 }
 
 // ISR
